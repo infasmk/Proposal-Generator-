@@ -6,10 +6,10 @@ import {
   ChevronRight, ChevronLeft, Plus, Trash2, Image as ImageIcon, 
   Music, Lock, CheckCircle2, Heart, Sparkles 
 } from 'lucide-react';
-import { Button, Input, TextArea, GlassCard } from '../components/UI';
-import { ProposalData, ProposalStep, Memory } from '../types';
-import { THEMES } from '../constants';
-import { generateId } from '../utils/storage';
+import { Button, Input, TextArea, GlassCard } from '../components/UI.tsx';
+import { ProposalData, ProposalStep, Memory } from '../types.ts';
+import { THEMES } from '../constants.tsx';
+import { generateId } from '../utils/storage.ts';
 
 interface CreatorProps {
   onCreate: (data: ProposalData) => void;

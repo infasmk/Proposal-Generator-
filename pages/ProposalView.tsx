@@ -2,12 +2,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Heart, Music, Volume2, VolumeX, Sparkles, Star, Diamond, Share2 } from 'lucide-react';
+import { Heart, Music, Volume2, VolumeX, Sparkles, Star, Diamond } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getProposalById } from '../utils/storage';
-import { THEMES, ThemeConfig } from '../constants';
-import { ProposalData } from '../types';
-import { Button, Input } from '../components/UI';
+import { getProposalById } from '../utils/storage.ts';
+import { THEMES, ThemeConfig } from '../constants.tsx';
+import { ProposalData } from '../types.ts';
+import { Button, Input } from '../components/UI.tsx';
 
 const BackgroundElements: React.FC<{ theme: ThemeConfig }> = ({ theme }) => {
   if (theme.id === 'ethereal') {

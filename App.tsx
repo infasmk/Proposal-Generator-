@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import Landing from './pages/Landing';
-import Creator from './pages/Creator';
-import ProposalView from './pages/ProposalView';
-import { ProposalData } from './types';
-import { getProposals, saveProposal } from './utils/storage';
+import { Routes, Route } from 'react-router-dom';
+import Landing from './pages/Landing.tsx';
+import Creator from './pages/Creator.tsx';
+import ProposalView from './pages/ProposalView.tsx';
+import { ProposalData } from './types.ts';
+import { getProposals, saveProposal } from './utils/storage.ts';
 
 const App: React.FC = () => {
   const [proposals, setProposals] = useState<ProposalData[]>([]);

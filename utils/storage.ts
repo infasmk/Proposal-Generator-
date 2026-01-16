@@ -1,5 +1,5 @@
 
-import { ProposalData } from '../types';
+import { ProposalData } from '../types.ts';
 
 const STORAGE_KEY = 'eternal_proposals';
 

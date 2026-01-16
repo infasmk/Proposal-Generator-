@@ -2,8 +2,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Stars, ArrowRight, ShieldCheck, Sparkles, Diamond, ExternalLink } from 'lucide-react';
-import { Button } from '../components/UI';
+import { Heart, ArrowRight, Diamond } from 'lucide-react';
+import { Button } from '../components/UI.tsx';
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
@@ -111,12 +111,12 @@ const Landing: React.FC = () => {
             description="Four world-class themes meticulously crafted with custom typography and motion systems."
           />
           <FeatureCard 
-            icon={<Stars className="w-10 h-10 text-violet-500" />}
+            icon={<Heart className="w-10 h-10 text-violet-500" />}
             title="Atmospheric Sound"
             description="Seamless background music integration to evoke precisely the right emotions at the right time."
           />
           <FeatureCard 
-            icon={<ShieldCheck className="w-10 h-10 text-emerald-500" />}
+            icon={<Heart className="w-10 h-10 text-emerald-500" />}
             title="Bank-Level Privacy"
             description="Encrypted URLs and optional password protection ensure your intimate story stays private."
           />
