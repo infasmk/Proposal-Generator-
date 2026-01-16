@@ -15,19 +15,19 @@ export const Button: React.FC<ButtonProps> = ({
   children, 
   ...props 
 }) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-full font-medium transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyles = "inline-flex items-center justify-center rounded-full font-bold transition-all duration-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
   
   const variants = {
-    primary: "bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 text-white shadow-[0_10px_20px_-5px_rgba(244,63,94,0.4)] hover:shadow-[0_20px_40px_-10px_rgba(244,63,94,0.6)] hover:brightness-110",
-    secondary: "bg-white/5 text-white backdrop-blur-xl border border-white/10 hover:bg-white/10 hover:border-white/20 shadow-xl",
-    outline: "border-2 border-rose-500/30 text-rose-500 hover:border-rose-500 hover:bg-rose-500/5",
-    ghost: "text-slate-400 hover:text-white hover:bg-white/5"
+    primary: "bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 text-white shadow-[0_15px_35px_-5px_rgba(244,63,94,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(244,63,94,0.6)] hover:-translate-y-1 hover:brightness-110",
+    secondary: "bg-white/[0.05] text-white backdrop-blur-2xl border border-white/10 hover:bg-white/[0.1] hover:border-white/20 hover:-translate-y-1 shadow-2xl",
+    outline: "border-2 border-rose-500/40 text-rose-500 hover:border-rose-500 hover:bg-rose-500/5",
+    ghost: "text-slate-500 hover:text-white hover:bg-white/5"
   };
 
   const sizes = {
-    sm: "px-6 py-2.5 text-sm",
-    md: "px-10 py-4 text-base",
-    lg: "px-12 py-5 text-xl"
+    sm: "px-8 py-3 text-xs tracking-widest uppercase",
+    md: "px-12 py-5 text-base",
+    lg: "px-16 py-7 text-2xl font-serif italic"
   };
 
   return (
@@ -42,10 +42,10 @@ export const Button: React.FC<ButtonProps> = ({
 
 export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label?: string }> = ({ label, className = '', ...props }) => {
   return (
-    <div className="flex flex-col space-y-3 w-full group">
-      {label && <label className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 ml-1 group-focus-within:text-rose-500 transition-colors">{label}</label>}
+    <div className="flex flex-col space-y-4 w-full group">
+      {label && <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-2 group-focus-within:text-rose-500 transition-colors duration-500">{label}</label>}
       <input 
-        className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500/50 transition-all placeholder:text-slate-700 text-white ${className}`}
+        className={`w-full bg-white/[0.02] border border-white/5 rounded-3xl px-8 py-5 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500/40 focus:bg-white/[0.04] transition-all duration-700 placeholder:text-slate-800 text-white text-lg ${className}`}
         {...props}
       />
     </div>
@@ -54,10 +54,10 @@ export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { lab
 
 export const TextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label?: string }> = ({ label, className = '', ...props }) => {
   return (
-    <div className="flex flex-col space-y-3 w-full group">
-      {label && <label className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 ml-1 group-focus-within:text-rose-500 transition-colors">{label}</label>}
+    <div className="flex flex-col space-y-4 w-full group">
+      {label && <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-2 group-focus-within:text-rose-500 transition-colors duration-500">{label}</label>}
       <textarea 
-        className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500/50 transition-all min-h-[140px] placeholder:text-slate-700 text-white leading-relaxed ${className}`}
+        className={`w-full bg-white/[0.02] border border-white/5 rounded-[2.5rem] px-8 py-6 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500/40 focus:bg-white/[0.04] transition-all duration-700 min-h-[180px] placeholder:text-slate-800 text-white text-lg leading-relaxed ${className}`}
         {...props}
       />
     </div>
@@ -66,11 +66,11 @@ export const TextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 export const GlassCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <motion.div 
-    initial={{ opacity: 0, y: 30 }}
+    initial={{ opacity: 0, y: 50 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-    className={`glass p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-2xl ${className}`}
+    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+    className={`glass p-16 rounded-[4rem] border border-white/5 bg-white/[0.01] backdrop-blur-[40px] shadow-3xl ${className}`}
   >
     {children}
   </motion.div>

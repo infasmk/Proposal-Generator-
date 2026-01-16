@@ -12,8 +12,9 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.12.0",
-    "lucide-react": "^0.562.0",
-    "framer-motion": "^12.26.2"
+    "lucide-react": "^0.475.0",
+    "framer-motion": "^12.4.7",
+    "canvas-confetti": "^1.9.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

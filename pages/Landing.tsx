@@ -2,136 +2,143 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Stars, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { Heart, Stars, ArrowRight, ShieldCheck, Sparkles, Diamond, ExternalLink } from 'lucide-react';
 import { Button } from '../components/UI';
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0f0a0f]">
-      {/* Background Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-rose-900/20 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-violet-900/20 blur-[120px] rounded-full pointer-events-none" />
-
-      {/* Floating Sparkles */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ 
-              opacity: [0, 1, 0], 
-              scale: [0, 1, 0],
-              y: [0, -100] 
-            }}
-            transition={{ 
-              duration: Math.random() * 3 + 2, 
-              repeat: Infinity, 
-              delay: Math.random() * 5 
-            }}
-            style={{
-              position: 'absolute',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          >
-            <Sparkles className="w-4 h-4 text-rose-300" />
-          </motion.div>
-        ))}
+    <div className="relative min-h-screen overflow-hidden bg-[#02040a]">
+      {/* Cinematic Background */}
+      <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-rose-600/10 blur-[150px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-violet-600/10 blur-[150px] rounded-full" />
       </div>
 
-      <nav className="relative z-10 flex items-center justify-between px-8 py-8 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-2">
-          <Heart className="w-6 h-6 text-rose-500 fill-rose-500" />
-          <span className="text-xl font-serif tracking-widest uppercase">Eternal</span>
-        </div>
-        <div className="hidden md:flex items-center space-x-8 text-sm text-slate-400 font-medium">
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/create')}>Sign In</Button>
-        </div>
+      {/* Navigation */}
+      <nav className="relative z-50 flex items-center justify-between px-8 py-10 max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center space-x-3"
+        >
+          <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center shadow-lg shadow-rose-500/20">
+            <Heart className="w-6 h-6 text-white fill-white" />
+          </div>
+          <span className="text-2xl font-serif tracking-[0.2em] uppercase font-bold">Eternal</span>
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center space-x-6"
+        >
+          <Button variant="ghost" size="sm" onClick={() => navigate('/create')} className="hidden md:flex">How it works</Button>
+          <Button variant="secondary" size="sm" onClick={() => navigate('/create')}>Create Experience</Button>
+        </motion.div>
       </nav>
 
-      <main className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-20 pb-32">
+      {/* Hero Section */}
+      <main className="relative z-10 pt-20 pb-40 px-6 max-w-7xl mx-auto text-center">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-4xl"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-5xl mx-auto"
         >
-          <div className="inline-flex items-center space-x-2 px-4 py-1 rounded-full bg-white/5 border border-white/10 mb-8">
-            <Stars className="w-4 h-4 text-amber-400" />
-            <span className="text-xs font-semibold tracking-wider text-slate-300 uppercase">Crafting core memories since 2024</span>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center space-x-2 px-6 py-2 rounded-full glass border-white/10 mb-12"
+          >
+            <Diamond className="w-4 h-4 text-amber-300" />
+            <span className="text-[10px] font-black tracking-[0.4em] text-white uppercase">The Gold Standard of Proposals</span>
+          </motion.div>
           
-          <h1 className="text-5xl md:text-8xl font-serif mb-8 leading-[1.1]">
-            Turn your <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-500 to-violet-500 italic">love story</span> into a digital masterpiece.
+          <h1 className="text-6xl md:text-[10rem] font-serif mb-10 leading-[0.85] tracking-tighter">
+            Where <span className="italic text-rose-500">forever</span> <br className="hidden md:block" /> begins.
           </h1>
           
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-            Create a private, cinematic proposal experience that your partner will cherish forever. Elegant, intimate, and absolutely unforgettable.
+          <p className="text-xl md:text-3xl text-slate-400 max-w-2xl mx-auto mb-16 leading-relaxed font-light">
+            Don't just ask. Curate a cinematic digital narrative that encapsulates every heartbeat of your journey.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Button size="lg" onClick={() => navigate('/create')}>
-              Create Your Proposal <ArrowRight className="ml-2 w-5 h-5" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Button size="lg" onClick={() => navigate('/create')} className="px-12 py-6 rounded-[2rem] text-xl shadow-[0_20px_50px_rgba(244,63,94,0.3)]">
+              Build Your Story <ArrowRight className="ml-3 w-6 h-6" />
             </Button>
-            <Button variant="secondary" size="lg">
-              View Sample Page
+            <Button variant="secondary" size="lg" className="px-12 py-6 rounded-[2rem] text-xl">
+              Explore Template
             </Button>
           </div>
         </motion.div>
 
-        {/* Floating Demo Preview */}
+        {/* Dynamic Demo Preview */}
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="mt-24 w-full max-w-5xl mx-auto relative px-4"
+          transition={{ delay: 0.5, duration: 1.2 }}
+          className="mt-32 w-full relative"
         >
-          <div className="aspect-video glass rounded-3xl overflow-hidden shadow-2xl shadow-rose-500/10 border border-white/10">
-            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1518196775741-20158462bbff?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center flex items-center justify-center relative">
-              <div className="absolute inset-0 bg-black/40" />
-              <div className="relative text-center">
-                <h2 className="text-4xl md:text-6xl font-serif text-white mb-4">Sarah & Michael</h2>
-                <div className="w-12 h-[1px] bg-white/50 mx-auto mb-4" />
-                <p className="text-white/80 font-serif italic text-xl">The start of our forever...</p>
-              </div>
+          <div className="relative aspect-[16/9] max-w-6xl mx-auto rounded-[3rem] overflow-hidden border border-white/5 shadow-2xl shadow-rose-500/10">
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#02040a]/80 z-10" />
+            <img 
+              src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=2000" 
+              className="w-full h-full object-cover"
+              alt="Luxury Proposal Preview"
+            />
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-20">
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 4 }}
+                className="glass p-8 rounded-[2rem] border-white/20 text-center"
+              >
+                <h2 className="text-4xl md:text-6xl font-serif text-white mb-2 italic">Julian & Sofia</h2>
+                <div className="w-12 h-[1px] bg-rose-500 mx-auto mb-4" />
+                <p className="text-white/60 tracking-[0.3em] uppercase text-[10px] font-bold">The Ethereal Theme</p>
+              </motion.div>
             </div>
           </div>
         </motion.div>
       </main>
 
-      <section id="features" className="relative z-10 py-32 px-4 bg-[#0f0a0f]/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+      {/* Features Grid */}
+      <section id="features" className="relative z-10 py-40 px-6 bg-gradient-to-b from-transparent to-[#050505]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
           <FeatureCard 
-            icon={<ShieldCheck className="w-8 h-8 text-rose-500" />}
-            title="Private & Secure"
-            description="Your proposal is only accessible via a unique link. Optional password protection for complete peace of mind."
+            icon={<Diamond className="w-10 h-10 text-rose-500" />}
+            title="Editorial Design"
+            description="Four world-class themes meticulously crafted with custom typography and motion systems."
           />
           <FeatureCard 
-            icon={<Stars className="w-8 h-8 text-violet-500" />}
-            title="Cinematic Motion"
-            description="Ultra-smooth entrance animations and scroll-based storytelling that feel like a high-end film production."
+            icon={<Stars className="w-10 h-10 text-violet-500" />}
+            title="Atmospheric Sound"
+            description="Seamless background music integration to evoke precisely the right emotions at the right time."
           />
           <FeatureCard 
-            icon={<Heart className="w-8 h-8 text-pink-500" />}
-            title="Emotional Timeline"
-            description="Relive your favorite moments through a beautiful photographic timeline of your journey together."
+            icon={<ShieldCheck className="w-10 h-10 text-emerald-500" />}
+            title="Bank-Level Privacy"
+            description="Encrypted URLs and optional password protection ensure your intimate story stays private."
           />
         </div>
       </section>
+
+      <footer className="py-20 text-center border-t border-white/5">
+        <p className="text-[10px] tracking-[0.5em] uppercase font-black text-slate-600">Established MMXXIV • Eternal</p>
+      </footer>
     </div>
   );
 };
 
 const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
-  <div className="p-8 rounded-3xl glass-dark hover:border-white/20 transition-all duration-500 group">
-    <div className="mb-6 p-3 bg-white/5 rounded-2xl w-fit group-hover:scale-110 transition-transform">{icon}</div>
-    <h3 className="text-2xl font-serif mb-4">{title}</h3>
-    <p className="text-slate-400 leading-relaxed">{description}</p>
-  </div>
+  <motion.div 
+    whileHover={{ y: -10 }}
+    className="p-12 rounded-[2.5rem] glass border-white/5 group transition-all duration-500 hover:bg-white/[0.04]"
+  >
+    <div className="mb-10 p-5 bg-white/5 rounded-3xl w-fit group-hover:scale-110 group-hover:bg-rose-500/10 transition-all duration-500">{icon}</div>
+    <h3 className="text-3xl font-serif mb-4">{title}</h3>
+    <p className="text-slate-400 leading-relaxed text-lg font-light">{description}</p>
+  </motion.div>
 );
 
 export default Landing;

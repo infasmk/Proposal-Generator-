@@ -2,7 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Heart, Music, Volume2, VolumeX, Sparkles, Star } from 'lucide-react';
+import { Heart, Music, Volume2, VolumeX, Sparkles, Star, Diamond, Share2 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { getProposalById } from '../utils/storage';
 import { THEMES, ThemeConfig } from '../constants';
 import { ProposalData } from '../types';
@@ -12,29 +13,29 @@ const BackgroundElements: React.FC<{ theme: ThemeConfig }> = ({ theme }) => {
   if (theme.id === 'ethereal') {
     return (
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {[...Array(40)].map((_, i) => (
+        {[...Array(60)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0 }}
             animate={{ 
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.6, 0.1],
+              scale: [0.5, 1.5, 0.5],
             }}
             transition={{ 
-              duration: 3 + Math.random() * 4, 
+              duration: 4 + Math.random() * 6, 
               repeat: Infinity, 
               delay: Math.random() * 5 
             }}
-            className="absolute bg-white rounded-full blur-[1px]"
+            className="absolute bg-white rounded-full blur-[2px]"
             style={{
-              width: Math.random() * 3 + 'px',
-              height: Math.random() * 3 + 'px',
+              width: Math.random() * 4 + 'px',
+              height: Math.random() * 4 + 'px',
               left: Math.random() * 100 + '%',
               top: Math.random() * 100 + '%',
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-500/5 to-transparent mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-rose-500/10 mix-blend-screen" />
       </div>
     );
   }
@@ -42,39 +43,27 @@ const BackgroundElements: React.FC<{ theme: ThemeConfig }> = ({ theme }) => {
   if (theme.id === 'classic') {
     return (
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {[...Array(12)].map((_, i) => (
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(244,63,94,0.05),transparent_70%)]" />
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
             animate={{ 
-              y: [-20, 1200],
-              x: [0, Math.random() * 100 - 50],
+              y: [-100, 1500],
+              x: [Math.random() * 20 - 10, Math.random() * 20 - 10],
               rotate: [0, 360]
             }}
             transition={{ 
-              duration: 15 + Math.random() * 10, 
+              duration: 20 + Math.random() * 10, 
               repeat: Infinity, 
               ease: "linear",
-              delay: Math.random() * 10 
+              delay: Math.random() * 15 
             }}
-            className="absolute text-rose-200/20"
-            style={{ left: Math.random() * 100 + '%', top: '-50px' }}
+            className="absolute opacity-10"
+            style={{ left: Math.random() * 100 + '%', top: '-10%' }}
           >
-            <Heart size={Math.random() * 20 + 10} fill="currentColor" />
+            <Heart size={Math.random() * 24 + 12} fill="#f43f5e" className="text-rose-500" />
           </motion.div>
         ))}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-30" />
-      </div>
-    );
-  }
-
-  if (theme.id === 'dark') {
-    return (
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-rose-500/5 blur-[120px] rounded-full" 
-        />
       </div>
     );
   }
@@ -86,16 +75,18 @@ const ScrollReveal: React.FC<{ children: React.ReactNode; direction?: 'up' | 'le
   const variants = {
     hidden: { 
       opacity: 0, 
-      y: direction === 'up' ? 60 : 0,
-      x: direction === 'left' ? -60 : direction === 'right' ? 60 : 0,
-      scale: 0.95
+      y: direction === 'up' ? 80 : 0,
+      x: direction === 'left' ? -80 : direction === 'right' ? 80 : 0,
+      scale: 0.9,
+      filter: 'blur(10px)'
     },
     visible: { 
       opacity: 1, 
       y: 0, 
       x: 0, 
       scale: 1,
-      transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
+      filter: 'blur(0px)',
+      transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -103,7 +94,7 @@ const ScrollReveal: React.FC<{ children: React.ReactNode; direction?: 'up' | 'le
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+      viewport={{ once: true, margin: "-10%" }}
       variants={variants}
     >
       {children}
@@ -122,11 +113,11 @@ const ProposalView: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   const { scrollYProgress } = useScroll();
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 45, damping: 15, restDelta: 0.001 });
   
-  const opacity = useTransform(smoothProgress, [0, 0.15], [1, 0]);
-  const scale = useTransform(smoothProgress, [0, 0.15], [1, 0.9]);
-  const blurValue = useTransform(smoothProgress, [0, 0.1], ["blur(0px)", "blur(10px)"]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
+  const heroScale = useTransform(smoothProgress, [0, 0.2], [1, 0.8]);
+  const heroBlur = useTransform(smoothProgress, [0, 0.15], ["blur(0px)", "blur(20px)"]);
 
   useEffect(() => {
     if (id) {
@@ -149,38 +140,53 @@ const ProposalView: React.FC = () => {
   const toggleMusic = () => {
     if (audioRef.current) {
       if (isPlaying) audioRef.current.pause();
-      else audioRef.current.play().catch(e => console.log("Audio play failed", e));
+      else audioRef.current.play().catch(e => console.log("Audio play blocked", e));
       setIsPlaying(!isPlaying);
     }
+  };
+
+  const handleAccept = () => {
+    setHasAccepted(true);
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#f43f5e', '#ec4899', '#ffffff', '#fbbf24']
+    });
+    // Create extra bursts
+    setTimeout(() => {
+      confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } });
+      confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } });
+    }, 500);
   };
 
   if (!data) return null;
 
   if (isLocked) {
     return (
-      <div className="min-h-screen bg-[#0f0a0f] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-6">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+          initial={{ opacity: 0, scale: 0.8, y: 40 }} 
           animate={{ opacity: 1, scale: 1, y: 0 }} 
-          className="max-w-md w-full glass p-10 rounded-[2.5rem] text-center space-y-8 shadow-2xl border border-white/10"
+          className="max-w-md w-full glass p-12 rounded-[3rem] text-center space-y-10"
         >
           <div className="relative inline-block">
-            <Heart className="w-16 h-16 text-rose-500 fill-rose-500/20 animate-pulse" />
-            <Sparkles className="absolute -top-2 -right-2 text-amber-400 w-6 h-6" />
+            <Diamond className="w-16 h-16 text-rose-500 animate-pulse" />
+            <Sparkles className="absolute -top-4 -right-4 text-amber-400 w-8 h-8" />
           </div>
           <div>
-            <h1 className="text-4xl font-serif mb-3">A Private Chapter</h1>
-            <p className="text-slate-400 text-lg">This story is protected for intimacy. Enter the shared secret to continue.</p>
+            <h1 className="text-4xl font-serif mb-4 leading-tight">An Intimate Secret</h1>
+            <p className="text-slate-400 text-lg leading-relaxed">This story is for two souls only. Enter the secret word to witness the journey.</p>
           </div>
           <Input 
             type="password" 
-            placeholder="Secret word..." 
-            className="text-center text-xl tracking-widest bg-white/5 border-white/10 py-4"
+            placeholder="Shared secret word..." 
+            className="text-center text-2xl tracking-[0.3em] bg-white/5 border-white/10 py-6"
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleUnlock()}
           />
-          <Button className="w-full py-6 rounded-2xl text-lg font-semibold" onClick={handleUnlock}>Unlock Forever</Button>
+          <Button className="w-full py-8 rounded-3xl text-xl font-bold" onClick={handleUnlock}>Unlock Experience</Button>
         </motion.div>
       </div>
     );
@@ -189,52 +195,50 @@ const ProposalView: React.FC = () => {
   const theme = THEMES.find(t => t.id === data.theme) || THEMES[0];
 
   return (
-    <div className={`min-h-[500vh] ${theme.colors.bg} ${theme.colors.text} ${theme.typography.tracking} transition-colors duration-1000 overflow-x-hidden selection:bg-rose-500/30`}>
-      {data.musicUrl && (
-        <audio ref={audioRef} src={data.musicUrl} loop />
-      )}
+    <div className={`min-h-[600vh] ${theme.colors.bg} ${theme.colors.text} transition-colors duration-1000 overflow-x-hidden selection:bg-rose-500/40`}>
+      {data.musicUrl && <audio ref={audioRef} src={data.musicUrl} loop />}
       
       <BackgroundElements theme={theme} />
 
-      {/* Music Toggle Floating */}
-      <motion.button
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        onClick={toggleMusic}
-        className="fixed top-8 right-8 z-50 p-4 rounded-full glass-dark text-white border border-white/10 hover:scale-110 transition-transform active:scale-95"
-      >
-        {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
-      </motion.button>
-
-      {/* Progress Bar */}
-      <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-rose-500 z-[60] origin-left"
-        style={{ scaleX: smoothProgress }}
-      />
+      {/* Persistent HUD */}
+      <div className="fixed top-10 left-0 right-0 z-50 px-10 flex justify-between items-center pointer-events-none">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 0.5, x: 0 }} className="flex items-center space-x-2 text-[10px] tracking-[0.5em] uppercase font-black">
+          <Heart className="w-3 h-3 text-rose-500" />
+          <span>Eternal Journey</span>
+        </motion.div>
+        <motion.button
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          onClick={toggleMusic}
+          className="pointer-events-auto p-5 rounded-full glass-dark text-white border-white/10 hover:scale-110 active:scale-95 transition-all shadow-2xl"
+        >
+          {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+        </motion.button>
+      </div>
 
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative px-6 text-center">
-        <motion.div style={{ opacity, scale, filter: blurValue }} className="z-10 max-w-5xl">
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale, filter: heroBlur }} className="z-10">
           <motion.div
-            initial={{ opacity: 0, scale: 0.7, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-12 relative inline-block"
+            initial={{ opacity: 0, scale: 0.5, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-16 relative"
           >
-            <div className="absolute inset-0 bg-rose-500/20 blur-3xl rounded-full scale-110" />
+            <div className="absolute inset-[-40px] bg-rose-500/20 blur-[100px] rounded-full" />
             <img 
               src={data.mainImageUrl} 
-              alt="Main" 
-              className="w-48 h-48 md:w-72 md:h-72 rounded-[3rem] object-cover mx-auto shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] relative border-4 border-white/20"
+              alt="Main Story" 
+              className="w-56 h-56 md:w-80 md:h-80 rounded-[4rem] object-cover mx-auto shadow-[0_40px_80px_-20px_rgba(0,0,0,0.5)] border-4 border-white/10 relative"
             />
           </motion.div>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
             <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 1.2 }}
-              className={`text-6xl md:text-9xl ${theme.typography.serif ? 'font-serif' : 'font-sans font-black'} tracking-tighter leading-none`}
+              transition={{ delay: 0.5, duration: 1.5 }}
+              className={`text-7xl md:text-[12rem] ${theme.typography.serif ? 'font-serif' : 'font-sans font-black'} tracking-tighter leading-none`}
             >
               {data.creatorName} <span className="text-rose-500">&</span> {data.partnerName}
             </motion.h1>
@@ -242,94 +246,79 @@ const ProposalView: React.FC = () => {
             <motion.div 
                initial={{ scaleX: 0 }}
                animate={{ scaleX: 1 }}
-               transition={{ delay: 1, duration: 1.5, ease: "circOut" }}
-               className={`h-[1px] w-32 mx-auto ${theme.colors.accent} opacity-30`} 
+               transition={{ delay: 1, duration: 2, ease: "circOut" }}
+               className={`h-[1px] w-48 mx-auto ${theme.colors.accent} opacity-40`} 
             />
             
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.4, duration: 1.2 }}
-              className="text-xl md:text-3xl italic opacity-70 font-serif"
+              transition={{ delay: 1.5, duration: 1.5 }}
+              className="text-2xl md:text-4xl italic opacity-60 font-serif"
             >
               {data.title}
             </motion.p>
           </div>
         </motion.div>
 
-        {/* Scroll Indicator */}
         <motion.div 
           animate={{ y: [0, 15, 0] }}
-          transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-4 opacity-40"
+          transition={{ repeat: Infinity, duration: 3 }}
+          className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-4 opacity-30"
         >
-          <span className="text-[10px] tracking-[0.4em] uppercase font-bold">The Journey Begins</span>
-          <div className="w-[1px] h-20 bg-current" />
+          <div className="w-[1px] h-24 bg-current" />
         </motion.div>
       </section>
 
-      {/* Memories Section */}
-      <section className="py-64 px-6 max-w-6xl mx-auto">
-        <div className="mb-40 text-center">
-          <ScrollReveal direction="none">
-            <span className="text-xs tracking-[0.5em] uppercase opacity-40 font-bold block mb-4">Chronicles</span>
-            <h2 className="text-5xl md:text-7xl font-serif">A Lifetime of Firsts</h2>
-          </ScrollReveal>
-        </div>
-
-        <div className="space-y-80">
-          {data.memories.map((m, i) => (
-            <div key={m.id} className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-16 md:gap-32`}>
-              <ScrollReveal direction={i % 2 === 0 ? 'left' : 'right'}>
-                <div className="w-full md:w-[500px] group relative">
-                  <div className="absolute inset-0 bg-rose-500/10 rounded-[2rem] translate-x-4 translate-y-4 -z-10 group-hover:translate-x-6 group-hover:translate-y-6 transition-transform duration-500" />
-                  <div className="aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl relative">
-                    <img 
-                      src={`https://images.unsplash.com/photo-1518196775741-20158462bbff?auto=format&fit=crop&q=80&w=1000&sig=${m.id}`} 
-                      alt={m.title} 
-                      className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000" 
-                    />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
-                  </div>
+      {/* Memories Narrative */}
+      <section className="py-80 px-6 max-w-7xl mx-auto space-y-[40vh]">
+        {data.memories.map((m, i) => (
+          <div key={m.id} className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-20 md:gap-40`}>
+            <ScrollReveal direction={i % 2 === 0 ? 'left' : 'right'}>
+              <div className="w-full md:w-[600px] group relative">
+                <div className="absolute inset-0 bg-rose-500/5 rounded-[3rem] translate-x-8 translate-y-8 -z-10 group-hover:translate-x-12 group-hover:translate-y-12 transition-all duration-700" />
+                <div className="aspect-[3/4] rounded-[3.5rem] overflow-hidden shadow-3xl relative">
+                  <img 
+                    src={`https://images.unsplash.com/photo-1518196775741-20158462bbff?auto=format&fit=crop&q=80&w=1200&sig=${m.id}`} 
+                    alt={m.title} 
+                    className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[2s]" 
+                  />
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-all duration-1000" />
                 </div>
-              </ScrollReveal>
+              </div>
+            </ScrollReveal>
 
-              <ScrollReveal direction={i % 2 === 0 ? 'right' : 'left'}>
-                <div className="flex-1 space-y-6 text-left">
-                  <span className={`text-sm tracking-widest uppercase py-2 px-4 rounded-full ${theme.colors.card} border ${theme.colors.border}`}>
-                    {new Date(m.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            <ScrollReveal direction={i % 2 === 0 ? 'right' : 'left'}>
+              <div className="flex-1 space-y-10 text-left">
+                <div className="flex items-center space-x-4">
+                  <span className={`text-[10px] tracking-[0.4em] uppercase font-black py-3 px-6 rounded-full glass border-white/10`}>
+                    {new Date(m.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </span>
-                  <h3 className="text-4xl md:text-6xl font-serif leading-tight">{m.title}</h3>
-                  <div className={`w-12 h-1 ${theme.colors.accent} opacity-30`} />
-                  <p className="text-2xl md:text-3xl leading-relaxed opacity-80 font-serif italic max-w-lg">
-                    "{m.description}"
-                  </p>
                 </div>
-              </ScrollReveal>
-            </div>
-          ))}
-        </div>
+                <h3 className="text-5xl md:text-8xl font-serif leading-none italic">{m.title}</h3>
+                <div className={`w-20 h-1 ${theme.colors.accent} opacity-50`} />
+                <p className="text-2xl md:text-4xl leading-relaxed opacity-70 font-serif italic max-w-2xl">
+                  "{m.description}"
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
+        ))}
       </section>
 
-      {/* Love Letter Section - Editorial Style */}
-      <section className="py-80 px-6 relative">
-        <div className="max-w-4xl mx-auto">
+      {/* The Soul Message */}
+      <section className="py-80 px-6">
+        <div className="max-w-5xl mx-auto">
           <ScrollReveal direction="none">
-            <div className={`p-16 md:p-32 rounded-[3rem] ${theme.colors.card} border ${theme.colors.border} relative overflow-hidden group shadow-2xl`}>
-              {/* Decorative Quote Mark */}
-              <div className="absolute -top-10 -left-10 text-[20rem] font-serif italic opacity-[0.03] select-none pointer-events-none group-hover:opacity-[0.05] transition-opacity">
-                &ldquo;
-              </div>
-              
-              <div className="relative z-10 space-y-12">
-                <div className="flex justify-center">
-                  <Heart className="text-rose-500/40 w-12 h-12" />
-                </div>
-                <p className="text-3xl md:text-5xl font-serif leading-relaxed italic text-center whitespace-pre-wrap">
+            <div className={`p-20 md:p-40 rounded-[5rem] ${theme.colors.card} border ${theme.colors.border} relative overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.5)]`}>
+              <div className="absolute -top-10 -left-10 text-[30rem] font-serif italic opacity-[0.02] select-none pointer-events-none">&ldquo;</div>
+              <div className="relative z-10 text-center space-y-16">
+                <Heart className="text-rose-500 w-16 h-16 mx-auto fill-rose-500/20" />
+                <p className="text-4xl md:text-7xl font-serif leading-tight italic whitespace-pre-wrap">
                   {data.message}
                 </p>
-                <div className="flex justify-center pt-8">
-                  <span className="text-xs tracking-[0.4em] uppercase font-bold opacity-30">Forever Yours, {data.creatorName}</span>
+                <div className="pt-20">
+                  <p className="text-xs tracking-[1em] uppercase font-black opacity-30">Forever yours, always.</p>
                 </div>
               </div>
             </div>
@@ -337,97 +326,61 @@ const ProposalView: React.FC = () => {
         </div>
       </section>
 
-      {/* The Question - Grand Finale */}
-      <section className="min-h-[120vh] flex flex-col items-center justify-center px-6 relative overflow-hidden pb-40">
-        <AnimatePresence>
-          {hasAccepted && (
-            <div className="absolute inset-0 pointer-events-none z-[100]">
-              {[...Array(80)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ 
-                    opacity: 0, 
-                    scale: 0, 
-                    x: '50vw', 
-                    y: '50vh',
-                    rotate: 0 
-                  }}
-                  animate={{ 
-                    opacity: [0, 1, 1, 0],
-                    scale: [0, Math.random() * 1.5 + 0.5, 0],
-                    x: `${Math.random() * 100}vw`,
-                    y: `${Math.random() * 100}vh`,
-                    rotate: 360
-                  }}
-                  transition={{ duration: 3 + Math.random() * 3, ease: "circOut" }}
-                  className="absolute"
-                >
-                  {i % 2 === 0 ? (
-                    <Heart className="text-rose-500 w-6 h-6 fill-rose-500" />
-                  ) : (
-                    <Star className="text-amber-400 w-4 h-4 fill-amber-400" />
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </AnimatePresence>
-
-        <div className="text-center space-y-16 relative z-10 max-w-5xl">
+      {/* The Question Finale */}
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 relative pb-64">
+        <div className="text-center space-y-24 relative z-10 max-w-6xl">
           <ScrollReveal>
-            <div className="flex flex-col items-center space-y-12">
+            <div className="flex flex-col items-center space-y-20">
               <motion.div
                 animate={{ 
-                  scale: [1, 1.15, 1],
-                  filter: ["drop-shadow(0 0 0px #f43f5e00)", "drop-shadow(0 0 40px #f43f5e66)", "drop-shadow(0 0 0px #f43f5e00)"]
+                  scale: [1, 1.2, 1],
+                  filter: ["drop-shadow(0 0 0px #f43f5e00)", "drop-shadow(0 0 60px #f43f5e88)", "drop-shadow(0 0 0px #f43f5e00)"]
                 }}
-                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                transition={{ repeat: Infinity, duration: 4 }}
                 className="relative"
               >
-                <Heart className="w-24 h-24 md:w-40 md:h-40 text-rose-500 fill-rose-500" />
+                <Diamond className="w-32 h-32 md:w-56 md:h-56 text-rose-500 fill-rose-500/10" />
                 <motion.div 
-                  animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.4, 1] }}
-                  transition={{ repeat: Infinity, duration: 3 }}
-                  className="absolute inset-0 bg-rose-500 rounded-full blur-3xl -z-10" 
+                  animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 2, 1] }}
+                  transition={{ repeat: Infinity, duration: 4 }}
+                  className="absolute inset-0 bg-rose-500 rounded-full blur-[100px] -z-10" 
                 />
               </motion.div>
 
               {!hasAccepted ? (
                 <>
-                  <h2 className="text-6xl md:text-9xl font-serif leading-none tracking-tight">
-                    Will you spend <br /> <span className="italic text-rose-500 underline decoration-rose-500/20 underline-offset-[20px]">forever</span> with me?
+                  <h2 className="text-7xl md:text-[14rem] font-serif leading-[0.8] tracking-tighter">
+                    Will you <br /> stay <span className="italic text-rose-500">forever</span>?
                   </h2>
                   
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-12 pt-10">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-12">
                     <Button 
                       size="lg" 
-                      className="px-24 py-8 rounded-[2rem] text-3xl font-serif shadow-2xl hover:scale-105 active:scale-95 transition-all"
-                      onClick={() => setHasAccepted(true)}
+                      className="px-24 py-10 rounded-[3rem] text-4xl font-serif shadow-[0_40px_100px_rgba(244,63,94,0.4)] hover:scale-105 active:scale-95"
+                      onClick={handleAccept}
                     >
                       Yes, A Million Times
                     </Button>
-                    <motion.div whileHover={{ x: [0, -20, 20, -20, 0], scale: 0.9 }}>
-                       <Button 
-                        variant="ghost" 
-                        size="lg" 
-                        className="opacity-40 hover:opacity-100 text-xl"
-                      >
-                        No
-                      </Button>
+                    <motion.div whileHover={{ rotate: [0, -5, 5, -5, 0], x: [0, -10, 10, -10, 0] }}>
+                       <Button variant="ghost" className="opacity-40 hover:opacity-100 text-2xl">No</Button>
                     </motion.div>
                   </div>
                 </>
               ) : (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.8, y: 40 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 1.5, ease: "circOut" }}
-                  className="space-y-10"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 2, ease: "circOut" }}
+                  className="space-y-12"
                 >
-                  <h3 className="text-6xl md:text-[10rem] font-serif italic text-rose-500 leading-none">Finally, Ours.</h3>
+                  <h3 className="text-8xl md:text-[18rem] font-serif italic text-rose-500 leading-none">Finally.</h3>
                   <div className="space-y-4">
-                    <p className="text-2xl md:text-3xl opacity-60 font-serif">A new beginning, a shared soul, an eternal promise.</p>
-                    <p className="text-lg tracking-[0.5em] uppercase font-black opacity-30 pt-12">Established {new Date().getFullYear()}</p>
+                    <p className="text-3xl md:text-5xl opacity-80 font-serif">Today, our eternity began.</p>
+                    <div className="pt-20">
+                      <Button variant="secondary" onClick={() => navigate('/')} className="px-12 py-6 rounded-full">
+                        Create Your Own Eternal Story
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -436,8 +389,8 @@ const ProposalView: React.FC = () => {
         </div>
       </section>
 
-      <footer className="py-32 text-center opacity-30 text-[10px] tracking-[1em] uppercase font-bold z-10 relative">
-        Designed for a Lifetime by Eternal
+      <footer className="py-40 text-center opacity-20 text-[10px] tracking-[1.5em] uppercase font-black">
+        A Sacred Moment Captured by Eternal
       </footer>
     </div>
   );
