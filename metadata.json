@@ -1,0 +1,7 @@
+{
+  "name": "Eternal - Premium Proposal Generator",
+  "description": "Create intimate, cinematic, and memorable proposal websites to share with your loved ones. High-end design with emotional impact.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
